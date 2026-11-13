@@ -5,3 +5,5 @@
 [dir=rtl] body{text-align:right}[dir=rtl] .hero{direction:rtl}[dir=rtl] .nav{direction:rtl}
 
 .preview-card{cursor:pointer;transition:transform .2s,border-color .2s}.preview-card:hover,.preview-card:focus-visible{transform:translateY(-5px);border-color:#ff6b91;outline:none}.preview-hint{display:inline-block;margin-top:12px;color:var(--pink);font-size:11px}.video-placeholder video{width:100%;height:100%;object-fit:contain;background:#08060d;border-radius:15px}
+
+body[data-template='walk']{background:linear-gradient(180deg,#08241b,#100d18 80%)}body[data-template='fuel']{background:linear-gradient(180deg,#2a180b,#100d18 78%)}body[data-template='walk'] .button,body[data-template='fuel'] .button{background:var(--campaign-accent);color:#171225}body[data-template='walk'] .eyebrow,body[data-template='fuel'] .eyebrow{color:var(--campaign-accent)}[hidden]{display:none!important}

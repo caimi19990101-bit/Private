@@ -16,10 +16,13 @@ function card(x){return `<article class="content-card preview-card" data-preview
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 (async()=>{
  const data=await loadPublic();const site=data.site||{};const content=data.content?.length?data.content:fallback;
+ const template=site.templateId||'drama';document.body.dataset.template=template;document.documentElement.style.setProperty('--campaign-accent',site.accent|| (template==='walk'?'#35c98a':template==='fuel'?'#ff9a36':'#ff6b91'));
  document.querySelectorAll('.download-link').forEach(a=>a.href=site.downloadUrl||'#');
+ if(template!=='drama'){document.querySelectorAll('#discover,#anime,.how,.hero-art').forEach(el=>el.hidden=true);document.querySelectorAll('.download-band').forEach(el=>el.hidden=true);document.querySelectorAll('.hero .eyebrow').forEach(el=>el.textContent=template==='walk'?'DAILY STEP REWARDS':'SPECIAL FUEL CARD OFFER');document.querySelectorAll('.download-link').forEach(a=>{if(site.ctaText)a.textContent=site.ctaText})}
  if(site.brand)document.querySelectorAll('.brand').forEach(el=>el.textContent=site.brand);
- if(site.headline){const h=document.querySelector('.hero h1');if(h)h.innerHTML=esc(site.headline).replace(/\\n/g,'<br>');}
+ if(site.headline){const h=document.querySelector('.hero h1');if(h)h.textContent=site.headline;}
  if(site.subheadline){const p=document.querySelector('.hero .lead');if(p)p.textContent=site.subheadline;}
+ if(template!=='drama'){const cta=document.querySelector('.hero .download-link');if(cta&&site.ctaText)cta.textContent=site.ctaText;const watch=document.getElementById('watchPreview');if(watch)watch.hidden=true;}
  document.getElementById('dramaCards').innerHTML=content.filter(x=>x.type==='drama').map(card).join('');
  document.getElementById('animeCards').innerHTML=content.filter(x=>x.type==='anime').map(card).join('');
  const modal=document.getElementById('previewModal'), video=document.getElementById('previewVideo');let previewTimer;
