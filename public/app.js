@@ -12,7 +12,7 @@ const fallback=[
 async function loadPublic(){
  try{const r=await fetch('/api/public/site');if(!r.ok)throw 0;const d=await r.json();return d}catch(e){return {site:{brand:"ikantv",downloadUrl:"#",previewSeconds:59},content:fallback}}
 }
-function card(x){return `<article class="content-card"><img src="${esc(x.poster_url||'/assets/poster-romance.svg')}" alt="${esc(x.title)}"><div class="info"><h3>${esc(x.title)}</h3><p>${esc(x.category||'Featured')} · ${esc(x.description||'')}</p></div></article>`}
+function card(x){return `<article class="content-card preview-card" data-preview="${esc(x.id)}" tabindex="0" role="button" aria-label="Preview ${esc(x.title)}"><img src="${esc(x.poster_url||'/assets/poster-romance.svg')}" alt="${esc(x.title)}"><div class="info"><h3>${esc(x.title)}</h3><p>${esc(x.category||'Featured')} · ${esc(x.description||'')}</p><small class="preview-hint">▶ Preview 59 seconds</small></div></article>`}
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 (async()=>{
  const data=await loadPublic();const site=data.site||{};const content=data.content?.length?data.content:fallback;
@@ -22,9 +22,13 @@ function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&l
  if(site.subheadline){const p=document.querySelector('.hero .lead');if(p)p.textContent=site.subheadline;}
  document.getElementById('dramaCards').innerHTML=content.filter(x=>x.type==='drama').map(card).join('');
  document.getElementById('animeCards').innerHTML=content.filter(x=>x.type==='anime').map(card).join('');
+ const modal=document.getElementById('previewModal'), video=document.getElementById('previewVideo');let previewTimer;
+ function closePreview(){clearInterval(previewTimer);video.pause();video.removeAttribute('src');video.load();modal.classList.remove('open');modal.setAttribute('aria-hidden','true')}
+ function openPreview(item){const title=document.getElementById('previewTitle'), source=item?.video_url;title.textContent=item?.title||'Preview';modal.classList.add('open');modal.setAttribute('aria-hidden','false');document.getElementById('timer').textContent='59';if(!source){document.getElementById('previewNotice').textContent='Preview video is not set yet. Add a public video URL in the admin panel.';return}document.getElementById('previewNotice').textContent='';video.src=source;video.currentTime=0;video.play().catch(()=>{});let elapsed=0;previewTimer=setInterval(()=>{elapsed++;document.getElementById('timer').textContent=String(Math.max(0,59-elapsed));if(elapsed>=59){video.pause();clearInterval(previewTimer)}},1000)}
+ document.querySelectorAll('.preview-card').forEach(el=>{const item=content.find(x=>String(x.id)===el.dataset.preview);el.addEventListener('click',()=>openPreview(item));el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openPreview(item)}})});
  document.getElementById('year').textContent=new Date().getFullYear();
  const lang=document.getElementById('language');
  lang.addEventListener('change',()=>{const l=lang.value;document.documentElement.lang=l;document.documentElement.dir=l==='ar'?'rtl':'ltr';document.querySelectorAll('[data-i18n]').forEach(el=>{const k=el.dataset.i18n;if(translations[l]?.[k])el.innerHTML=translations[l][k]})});
- const modal=document.getElementById('previewModal');document.getElementById('watchPreview').onclick=()=>{modal.classList.add('open');modal.setAttribute('aria-hidden','false')};document.getElementById('closePreview').onclick=()=>{modal.classList.remove('open');modal.setAttribute('aria-hidden','true')};
+ document.getElementById('watchPreview').onclick=()=>openPreview(content.find(x=>x.type==='drama'&&x.video_url)||content[0]);document.getElementById('closePreview').onclick=closePreview;modal.addEventListener('click',e=>{if(e.target===modal)closePreview()});
  document.getElementById('timer').textContent=site.previewSeconds||59;
 })();
