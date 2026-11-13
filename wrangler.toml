@@ -5,4 +5,4 @@ pages_build_output_dir = "./public"
 [[d1_databases]]
 binding = "DB"
 database_name = "ikantv-content"
-database_id = "REPLACE_WITH_YOUR_D1_DATABASE_ID"
+database_id = "7788aacc-51a9-49b9-918d-f6e4e99cd8f6"
