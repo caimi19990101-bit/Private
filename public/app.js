@@ -18,7 +18,7 @@ function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&l
  const data=await loadPublic();const site=data.site||{};const content=data.content?.length?data.content:fallback;
  const template=site.templateId||'drama';document.body.dataset.template=template;document.documentElement.style.setProperty('--campaign-accent',site.accent|| (template==='walk'?'#35c98a':template==='fuel'?'#ff9a36':'#ff6b91'));
  document.querySelectorAll('.download-link').forEach(a=>a.href=site.downloadUrl||'#');
- if(template!=='drama'){document.querySelectorAll('#discover,#anime,.how,.hero-art').forEach(el=>el.hidden=true);document.querySelectorAll('.download-band').forEach(el=>el.hidden=true);document.querySelectorAll('.hero .eyebrow').forEach(el=>el.textContent=template==='walk'?'DAILY STEP REWARDS':'SPECIAL FUEL CARD OFFER');document.querySelectorAll('.download-link').forEach(a=>{if(site.ctaText)a.textContent=site.ctaText})}
+ if(template!=='drama'){document.querySelectorAll('#discover,#anime,.how,.hero-art,.download-band,.final-cta,.top-note,footer').forEach(el=>el.hidden=true);document.querySelectorAll('nav a').forEach(el=>el.hidden=true);document.querySelectorAll('.hero .eyebrow').forEach(el=>el.textContent=template==='walk'?'DAILY STEP REWARDS':'SPECIAL FUEL CARD OFFER');document.querySelectorAll('.download-link').forEach(a=>{if(site.ctaText)a.textContent=site.ctaText})}
  if(site.brand)document.querySelectorAll('.brand').forEach(el=>el.textContent=site.brand);
  if(site.headline){const h=document.querySelector('.hero h1');if(h)h.textContent=site.headline;}
  if(site.subheadline){const p=document.querySelector('.hero .lead');if(p)p.textContent=site.subheadline;}
@@ -34,4 +34,5 @@ function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&l
  lang.addEventListener('change',()=>{const l=lang.value;document.documentElement.lang=l;document.documentElement.dir=l==='ar'?'rtl':'ltr';document.querySelectorAll('[data-i18n]').forEach(el=>{const k=el.dataset.i18n;if(translations[l]?.[k])el.innerHTML=translations[l][k]})});
  document.getElementById('watchPreview').onclick=()=>openPreview(content.find(x=>x.type==='drama'&&x.video_url)||content[0]);document.getElementById('closePreview').onclick=closePreview;modal.addEventListener('click',e=>{if(e.target===modal)closePreview()});
  document.getElementById('timer').textContent=site.previewSeconds||59;
+ document.dispatchEvent(new Event('landing-ready'));
 })();
