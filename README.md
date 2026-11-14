@@ -42,3 +42,8 @@ Pages 项目 → **Settings → Variables and Secrets**，在 Production 添加�
 ## 免费额度说明
 
 Pages 提供免费静态托管；D1 和 Pages Functions 也有各自免费额度及使用限制。外部素材服务可能另有费用或流量限制。免费额度与资格可能变化，请以 [Cloudflare Pages 限制](https://developers.cloudflare.com/pages/platform/limits/)和 Cloudflare 控制台显示为准。项目目前不是“一键自动创建所有云资源”：数据库、绑定、密钥需首次在网页控制台手动设置。
+
+
+## 多语言与新增模板
+
+首页当前提供英语、葡萄牙语、印地语和阿拉伯语。切换语言会按模板重新渲染整页文案；新增模板时，给需要翻译的元素添加 `data-i18n="稳定的字段名"`，并在 `public/app.js` 的语言字典中为四种语言补齐相同字段。模板配置也可用 `site.localeContent[语言代码][字段名]` 覆盖对应译文。没有译文时显示模板原文，不会沿用上一次语言留下的文字。
